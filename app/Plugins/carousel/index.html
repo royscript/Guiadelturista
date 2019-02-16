@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JQM Carousel - Simple Demo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet"  href="ext/libs/jqm/jqm.css"> 
+  <script src="ext/libs/jquery/jquery.js"></script> 
+  <script src="ext/libs/jqm/jqm.js"></script> 
+
+  <style>
+.ui-carousel {
+	list-style: none outside none;
+	margin: 0 auto;
+	padding: 0;
+	text-align: center;
+	min-height: inherit;
+	height: inherit;
+	outline: 0;
+	overflow: hidden; /* firefox seems the only browser to properly overflow-hide round corners... */
+	margin: 0 -15px;
+	white-space: nowrap;
+}
+.ui-carousel li {
+	display: inline-block;
+	list-style: none outside none;
+	-webkit-border-radius: inherit;
+	border-radius: inherit;
+	overflow: inherit;
+	width: 100%;
+	height: inherit;
+	position: relative;
+}
+
+/* CSS slides for 3 images */
+.ui-carousel li:not(.ui-carousel-active) {
+	right: -200%;
+}
+.ui-carousel li.ui-carousel-active:nth-child(1):nth-last-child(3) {
+	right: 0%;
+},
+.ui-carousel li.ui-carousel-active:nth-child(1):nth-last-child(3) ~ li {
+	right: 100%;
+}
+.ui-carousel li.ui-carousel-active:nth-child(2):nth-last-child(2),
+.ui-carousel li.ui-carousel-active:nth-child(2):nth-last-child(2) ~ li:first-child {
+	right: 100%;
+}
+.ui-carousel li:nth-child(3):nth-last-child(1) {
+	right: -300%;
+}
+.ui-carousel li.ui-carousel-active:nth-child(3):nth-last-child(1) {
+	right: 200%;
+}
+
+.ui-carousel-inset {
+	margin: 1em auto;
+	-webkit-border-radius: 1em;
+	border-radius: 1em;
+}
+.ui-carousel li a {
+	-webkit-border-radius: inherit;
+	border-radius: inherit;
+	height: inherit;
+	text-decoration: none;
+	overflow: auto;
+	width: inherit;
+}
+.ui-carousel img {
+	width: 100%;
+	display: table-row-group;
+	float: left; /* fix for gap made by Firefox */
+	-webkit-border-radius: inherit;
+	border-radius: inherit;
+}
+.ui-carousel-inset img {
+	-webkit-border-radius: inherit;
+	border-radius: inherit;
+}
+/* Radios */
+.ui-carousel-controls {
+	text-align: center;
+}
+.ui-carousel-controls .ui-radio {
+	display: inline-block;
+	padding: 0 .25em;
+}
+.ui-carousel-controls .ui-radio label:after {
+	left: .2em;
+}
+/* Captions */
+.ui-carousel .ui-carousel-active .ui-carousel-selector {
+	display: table;
+}
+.ui-carousel-captions .ui-carousel-captions-content {
+	margin: 0;
+}
+.ui-carousel-captions .ui-carousel-captions-heading {
+	margin: 0;
+	padding: 0;
+}
+.ui-carousel-captions-top {
+	display: table-header-group;
+}
+.ui-carousel-captions-bottom {
+	display: table-footer-group;
+}
+.ui-carousel-inset .ui-carousel-captions-top ~ img {
+	-webkit-border-top-left-radius: 0;
+	border-top-left-radius: 0;
+	-webkit-border-top-right-radius: 0;
+	border-top-right-radius: 0;
+}
+.ui-carousel-inset .ui-carousel-captions-bottom ~ img {
+	-webkit-border-bottom-left-radius: 0;
+	border-bottom-left-radius: 0;
+	-webkit-border-bottom-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+/* handles */
+.ui-carousel.ui-carousel-handles li img {
+	height: inherit;
+}
+.ui-carousel.ui-carousel-inset.ui-carousel-handles {
+	max-width: 93%;
+}
+.ui-carousel.ui-carousel-inset.ui-carousel-handles,
+.ui-carousel-handle-left,
+.ui-carousel-handle-right {
+	vertical-align: middle;
+}
+.ui-carousel-handle-left.ui-carousel-handle-inset {
+	margin-right: .25em;
+	display: inline-block;
+}
+.ui-carousel-handle-right.ui-carousel-handle-inset {
+	margin-left: .25em;
+	display: inline-block;
+}
+.ui-carousel-handle-left:not(.ui-carousel-handle-inset) {
+	-webkit-border-bottom-left-radius: 0;
+	border-bottom-left-radius: 0;
+	-webkit-border-top-left-radius: 0;
+	border-top-left-radius: 0;
+	margin: -60% 0 0 -1.25em;
+	float: left;
+	display: inline-block;
+	padding: 0.5em;
+}
+.ui-carousel-handle-right:not(.ui-carousel-handle-inset) {
+	-webkit-border-bottom-right-radius: 0;
+	border-bottom-right-radius: 0;
+	-webkit-border-top-right-radius: 0;
+	border-top-right-radius: 0;
+	margin: -60% -1.25em 0 0;
+	float: right;
+	display: inline-block;
+	padding: 0.5em;
+}
+.ui-carousel.ui-carousel-inset.ui-carousel-handles {
+	margin: 0;
+}
+/* thumbnails */
+.ui-carousel.ui-carousel-thumbnails {
+	display: table;
+}
+.ui-carousel.ui-carousel-thumbnails li {
+	width: auto;
+	display: table-cell;
+	padding: .25em;
+	position: static;
+}
+.ui-carousel.ui-carousel-thumbnails li img {
+	display: inline-block;
+	float: none;
+	max-height: 5em;
+	min-height: 5em;
+	width: auto;
+}
+	</style>
+</head>
+<body>
+ 
+<div data-role="page">
+
+	<div data-role="header">
+		<h1>Carousel Demo</h1>
+	</div><!-- /header -->
+	
+	<div data-role="content" id="content">
+
+		<!-- <div style="width: 400px; height: 400px; display: inline-block;"> -->
+
+			<ul data-role="carousel" data-captions="true" data-shadow="true">
+				<li><a href="#"><img alt="" src="img/lumia_800.png"/><h1>Nokia Lumia </h1></a></li>
+				<li><a href="#"><img alt="" src="img/galaxy_express.png"/><h1>Samsung Galaxy </h1></a></li>
+				<li><a href="#"><img alt="" src="img/firefox_os.png"/><h1>Firefox Phone </h1></a></li>
+			</ul>
+		<!-- </div> -->
+
+		<!-- <div style="width: 400px; height: 200px; display: inline-block;"> -->
+			<ul data-role="carousel" data-shadow="true" data-thumbnails="true" data-handles="false">
+				<li><a href="#"><img alt="" src="img/lumia_800.png"/></a></li>
+				<li><a href="#"><img alt="" src="img/galaxy_express.png"/></a></li>
+				<li><a href="#"><img alt="" src="img/firefox_os.png"/></a></li>
+			</ul>
+		<!-- </div> -->
+	</div><!-- /content -->
+
+</div><!-- /page -->
+	<script type="text/javascript">
+(function( $, undefined ) {
+
+$.widget( "mobile.carousel", $.extend( {
+
+	options: {
+		enhanced: false,
+		handles: true,
+		barrel: null,
+		bullets: true,
+		bulletsPos: "bottom",
+		transition: "slide"
+	},
+
+	_create: function () {
+		this.refresh( true );
+	},
+
+	refresh: function ( create ) {
+		var el = this.element,
+			o = this.options;
+		if ( !o.thumbnails ) {
+			if ( !o.enhanced ) {
+				// clear barrel on refesh
+				if ( !create ) {
+					$( "#ui-carousel-barrel-" + this.uuid ).remove();
+				}
+				// generate UI and barrel and append to DOM
+				this._enhance( el, o );
+				el.parent()[ o.bulletsPos === "top" ? "prepend" : "append" ]( this._barrel );
+			} else {
+				this._barrel = $( "#" + o.barrel );
+			}
+
+			this._on( this._barrel.find( "input" ), { 
+				"click": "_change"
+			});
+
+			this._on( el, {
+				"keydown": "_onKeyPress",
+				"swipeleft": function () { this.jump( 1 ); },
+				"swiperight": function () { this.jump( -1 ); }
+			});
+		} else {
+			this._enhance( el, o );
+		}
+
+		if ( o.handles ) {
+			this._on( el.parent().find( "a.ui-carousel-handle" ), {
+				"click": function ( event ) {
+					this.jump( $( event.target ).is( "ui-carousel-handle-left" ) ? -1 : 1 );
+				}
+			});
+		}
+
+		this._items = this._getItems( "li" );
+		this._len = this._items.length;
+		this._direction = "";
+	},
+
+	_onKeyPress: function ( e ) {
+		switch (e.keyCode) {
+			case $.mobile.keyCode.LEFT: this.jump( -1 ); break;
+			case $.mobile.keyCode.RIGHT: this.jump( 1 ); break;
+		}
+	},
+
+	_change: function ( e ) {
+		var el = this.element,
+			o = this.options,
+			events = this._transitionEndEvents,
+			currentActive = el.children().filter( ".ui-carousel-active" ), 
+			nextActive = $( e.target ).data( "reference" );
+
+		// click on active
+		if ( nextActive.hasClass( "ui-carousel-active" ) ) {
+			el.focus();
+			return;
+		}
+
+		this._transition( currentActive, nextActive )
+		el.focus();
+	},
+
+	_getItems: function ( selector ) {
+		return this.element.find( selector );
+	},
+
+	jump: function ( increment ) {
+		var len = this._len,
+			go = this._items.index( this._getItems( "li.ui-carousel-active" ) ) + increment;
+
+		// allow rotation
+		switch ( true ) {
+			case go < 0: go = len - 1; break;
+			case go > len - 1: go = 0; break;
+		}
+		this._direction = increment > 0 ? "" : " reverse ";
+
+		// provide hook to modify slide
+		if ( this._trigger( "beforejump" ) === false ) {
+			return false;
+		}
+
+		this._barrel.find( "input" ).eq( go ).trigger( "click" ).checkboxradio( "refresh" );
+	},
+
+	_transition: function ( currentActive, nextActive ) {
+		var transition = $.mobile._maybeDegradeTransition( this.options.transition ),
+			bound = transition + this._direction;
+
+		currentActive.addClass( bound + " out " );
+		nextActive
+			.addClass( bound + " in ui-carousel-active" )
+			.animationComplete( function () {
+				currentActive.removeClass( bound + " ui-carousel-active out" );
+				nextActive.removeClass( bound + " in ");
+			});
+	}
+}, $.mobile.behaviors.addFirstLastClasses ) );
+
+})( jQuery );
+
+(function( $, undefined ) {
+
+$.widget( "mobile.carousel", $.mobile.carousel, {
+	options: {
+		corners: false,
+		captions: false,
+		captionpos: "top",
+		captiontheme: "a",
+		heading: "h1,h2,h3,h4,h5,h6,legend",
+		inset: false,
+		shadow: false,
+		thumbnails: false
+	},
+
+	_addButton: function ( inset, left ) {
+		var arr = left ? ["Left", "left", "l"] : ["Right", "right", "r"];
+
+		return $( '<a class="ui-carousel-handle ui-carousel-handle-' + arr[1] + 
+			' ui-btn ui-btn-icon-notext ui-corner-all ui-icon-carat-' + arr[2] + 
+					' ui-shadow ' + ( inset ? 'ui-carousel-handle-inset' : '' ) + 
+					'" href="#">' + arr[0] + '</a>');
+	},
+
+	_enhance: function ( el, o ) {
+		var i, item, radio, label, barrel, containsLink, prefix, $selector,
+			id = this.uuid,
+			items = el.children(),
+			len = items.length,
+			carouselClasses = "ui-carousel ",
+			fragment = document.createDocumentFragment(),
+			prefix = 'radio-' + id,
+			emptyString = "";
+
+		// handlers
+		if ( o.handles && len > 0 ) {
+			carouselClasses += " ui-carousel-handles";
+			el.after( this._addButton( o.inset, true ) )
+				.after( this._addButton( o.inset ) );
+		}
+
+		// thumbnails
+		if ( o.thumbnails ) {
+			carouselClasses += " ui-carousel-thumbnails";
+		} else {
+			for ( i = 0; i < len; i += 1 ) {
+				item = items[i];
+
+				// captions
+				if ( o.captions ) {
+					containsLink = item.children[ 0 ].tagName === "A";
+					$selector = containsLink ? $( item ).find( "a" )  : $( item );
+
+					$selector
+						.addClass( "ui-carousel-selector" )
+						.children()
+						.not( "img" )
+						.wrap( "<p class='ui-carousel-captions-content ui-bar-" + 
+								o.captiontheme + " ui-carousel-captions-" + 
+										o.captionpos + "'></p>")
+						.parent()
+						.prependTo( $selector )
+							.find( o.heading )
+							.addClass( "ui-carousel-captions-heading" );
+				}
+
+				// radios bullets
+				if ( o.bullets ) {
+					label = $( "<label data-" + $.mobile.ns + "iconpos='notext'></label>" );
+					radio = $( "<input type='radio' name='" + prefix + "' id='" +
+							prefix + "-" + i + "' value='" + i + "'/>" )
+							// set item as reference
+							.data( "reference", $( item ) );
+
+					if ( i === 0 ) {
+						radio.attr( "checked", true );
+						$( item ).addClass( "ui-carousel-active" );
+					}
+					label.append( radio );
+					fragment.appendChild( label[0] );
+				}
+			}
+		}
+
+		carouselClasses += o.captions ? " ui-carousel-captions" : emptyString;
+		carouselClasses += o.inset ? " ui-carousel-inset" : emptyString;
+
+		if ( !!o.inset ) {
+			carouselClasses += o.corners ? " ui-corner-all" : emptyString;
+			carouselClasses += o.shadow ? " ui-shadow" : emptyString;
+		}
+
+		if ( o.bullets && !o.thumbnails ) {
+			carouselClasses += " ui-carousel-bullets";
+			barrel = $( "<div id='ui-carousel-barrel-" + id + "' class='" +
+					"ui-carousel-controls ui-carousel-controls-" + o.bulletsPos + 
+							"'></div>");
+			this._barrel = barrel.append( fragment ).enhanceWithin();
+		}
+		// setting tabindex -1 allows to focus programmatically
+		el.addClass( carouselClasses ).attr("tabindex", -1);
+	}
+});
+
+})( jQuery );
+
+  </script>
+</body>
+</html>
